@@ -19,12 +19,14 @@ all: x64 x86
 
 x64: clean
 	@ echo "[*] Compile x64 executable..."
-	
+
 	@ nasm -f win64 Source/Asm/x64/asm.s -o Bin/asm.x64.o
 	@ $(CCX64) Source/*.c Bin/asm.x64.o -o $(EXECUTABLE_X64) $(CFLAGS) $(LFLAGS) -IInclude -masm=intel
 
 	@ echo "[*] Extract shellcode: $(RAWBINARY_X64)"
 	@ python3 Scripts/extract.py -f $(EXECUTABLE_X64) -o $(RAWBINARY_X64)
+
+	@ python3 Scripts/clike_format.py -f $(RAWBINARY_X64)
 
 	@ rm $(EXECUTABLE_X64)
 
@@ -36,6 +38,8 @@ x86: clean
 
 	@ echo "[*] Extract shellcode: $(RAWBINARY_X86)"
 	@ python3 Scripts/extract.py -f $(EXECUTABLE_X86) -o $(RAWBINARY_X86)
+
+	@ python3 Scripts/clike_format.py -f $(RAWBINARY_X86)
 
 	@ rm $(EXECUTABLE_X86)
 
